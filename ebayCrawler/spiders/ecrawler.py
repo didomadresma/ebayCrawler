@@ -4,15 +4,19 @@ import scrapy
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors.lxmlhtml import LxmlLinkExtractor as lle
 from scrapy.selector import Selector
-from scrapy.http import Request
 
-class espider(scrapy.Spider):
-    name = "espider"
+class espider(CrawlSpider):
+    name = "ecrawler"
     #download_delay = 4
     allowed_domains = ['ebay.com']
     start_urls = ['http://www.ebay.com/sch/i.html?_from=R40&_sacat=0&_nkw=coffee+maker&_pgn=1&_skc=25&rt=nc']
 
-    def parse(self, response):
+    rules = (
+    	Rule(lle(allow=r'http://www\.ebay\.com/sch/i\.html\?_from=R40&_sacat=0&_nkw=coffee\+maker&_pgn=1&_skc=25&rt=nc'), 
+    		callback='parse_item', follow=True),
+    	)
+
+    def parse_item(self, response):
     	nameList = response.xpath('//*[@id="ListViewInner"]/li/h3/a/text()').extract()
         linkList = response.xpath('//*[@id="ListViewInner"]/li/h3/a/@href').extract()
         
@@ -36,8 +40,7 @@ class espider(scrapy.Spider):
                 pass
 
         imgUrlList = response.xpath('//*[@id="ListViewInner"]/li/div/div/a/img/@src').extract()
-        # Not all imgUrls pull correct 
-        
+
         for i in range(len(nameList)):
             try:
                 yield {
@@ -49,15 +52,3 @@ class espider(scrapy.Spider):
                 }
             except:
                 pass
-
-        crawledLinks = self.start_urls
-
-        nextPageUrl = response.xpath('//*[@class="gspr next"]/@href').extract()[0]
-        print "NPU >>> ", nextPageUrl
-        if nextPageUrl != None and len(crawledLinks) < 10:
-            crawledLinks.append(nextPageUrl)
-            yield Request(response.urljoin(nextPageUrl), callback=self.parse)
-        else:
-            "nextPageUrl not defined"
-
-        print(crawledLinks)
