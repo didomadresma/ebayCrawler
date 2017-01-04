@@ -35,8 +35,16 @@ class espider(scrapy.Spider):
             else:
                 pass
 
-        imgUrlList = response.xpath('//*[@id="ListViewInner"]/li/div/div/a/img/@src').extract()
-        # Not all imgUrls pull correct 
+        # Not all imgUrls pull correct  if use >
+        #imgUrlList = response.xpath('//*[@id="ListViewInner"]/li/div/div/a/img/@src').extract()
+        imgUrlList = []
+        for link in linkList:
+        	#imgUrl example "http://thumbs.ebaystatic.com/images/g/B80AAOSwZQRYaBjw/s-l225.jpg"
+        	#part B80AAOSwZQRYaBjw extract from item link
+        	index = link.rindex(':')
+        	imgUrl = "http://thumbs.ebaystatic.com/images/g/" + link[index+1:] + "/s-l225.jpg"
+        	imgUrlList.append(imgUrl)
+
         
         for i in range(len(nameList)):
             try:

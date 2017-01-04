@@ -1,5 +1,6 @@
 *.git
 *.csv
 *.pyc
+*.json
 log.txt
 respTest.py
