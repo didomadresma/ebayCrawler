@@ -11,8 +11,10 @@ class EbaycrawlerPipeline(object):
     def __init__(self):
         #user = input("Enter DB username: ")
         #dbname = input("Enter DB name: ")
+        
+        #connect Postgres DB
         try:
-        	self.conn = psycopg2.connect("user='postgres' dbname='ebay' password='xenon101292,,'")
+        	self.conn = psycopg2.connect("user='postgres' dbname='ebay' password=''")
         except:
         	print("Error during db connect")
 
