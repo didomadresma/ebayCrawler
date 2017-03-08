@@ -73,6 +73,7 @@ DOWNLOAD_DELAY = 2
 
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
+ITEM_PIPELINES = {'ebayCrawler.pipelines.EbaycrawlerPipeline' : 300,}
 #ITEM_PIPELINES = {
 #    'ebayCrawler.pipelines.SomePipeline': 300,
 #}

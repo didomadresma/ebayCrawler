@@ -1,8 +1,6 @@
 #This spider pull next info from ebay product search list:
 # Name, link, cost, country, img. url
 import scrapy
-from scrapy.spiders import CrawlSpider, Rule
-from scrapy.linkextractors.lxmlhtml import LxmlLinkExtractor as lle
 from scrapy.selector import Selector
 from scrapy.http import Request
 
@@ -45,24 +43,23 @@ class espider(scrapy.Spider):
         	imgUrl = "http://thumbs.ebaystatic.com/images/g/" + link[index+1:] + "/s-l225.jpg"
         	imgUrlList.append(imgUrl)
 
-        
         for i in range(len(nameList)):
             try:
-                yield {
-                "name" : nameList[i],
+            	yield {
+            	"name" : nameList[i],
                 "link" : linkList[i],
                 "cost" : costList[i],
                 "country" : countryList[i],
                 "imgUrl" : imgUrlList[i]
                 }
             except:
-                pass
+            	pass
 
         crawledLinks = self.start_urls
 
         nextPageUrl = response.xpath('//*[@class="gspr next"]/@href').extract()[0]
-        print "NPU >>> ", nextPageUrl
-        if nextPageUrl != None and len(crawledLinks) < 10:
+        print("NPU >>> ", nextPageUrl)
+        if nextPageUrl != None and len(crawledLinks) < 5:
             crawledLinks.append(nextPageUrl)
             yield Request(response.urljoin(nextPageUrl), callback=self.parse)
         else:
